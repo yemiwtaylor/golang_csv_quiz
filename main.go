@@ -47,7 +47,7 @@ func main() {
 			}
 		}
 	}
-	fmt.Println("Total Score: ", totalScore, "out of ", len(questionsAndAnswers))
+	fmt.Println("Total Scores: ", totalScore, "out of ", len(questionsAndAnswers))
 }
 
 func readCsv(fileName string) [][]string {
