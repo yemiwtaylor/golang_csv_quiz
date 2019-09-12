@@ -5,14 +5,10 @@ import (
 	"encoding/csv"
 	"fmt"
 	"os"
-	"runtime"
 	"time"
 )
 
-var questionsAndAnswers [][]string
 var totalScore int
-var c chan string
-var problems []problem
 
 type problem struct {
 	q string
@@ -20,12 +16,13 @@ type problem struct {
 }
 
 func main() {
-	questionsAndAnswers = readCsv("problems.csv")
-	fmt.Println("Cores: ", runtime.NumCPU())
+	questionsAndAnswers := readCsv("problems.csv")
 
-	problems = parseQuestions(questionsAndAnswers)
+	problems := parseQuestions(questionsAndAnswers)
 
-	timer := time.NewTimer(2 * time.Second)
+	timer := time.NewTimer(5 * time.Second)
+
+	c := make(chan string)
 
 	for i := range problems {
 		question, correctAnswer := problems[i].q, problems[i].a
@@ -40,6 +37,7 @@ func main() {
 		select {
 		case <-timer.C:
 			fmt.Println("Time ran out")
+			fmt.Println("Total Scores: ", totalScore, "out of ", len(questionsAndAnswers))
 			return
 		case answer := <-c:
 			if answer == correctAnswer {
